@@ -8,7 +8,7 @@ namespace RestWithASPNETUdemy.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CalculatorController : ControllerBase
+    public class PersonsController : ControllerBase
     {
         // GET api/values/sum/5/5
         [HttpGet("sum/{firstNumber}/{secondNumber}")]
