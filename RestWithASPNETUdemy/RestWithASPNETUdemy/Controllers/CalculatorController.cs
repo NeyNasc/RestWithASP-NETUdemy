@@ -36,6 +36,32 @@ namespace RestWithASPNETUdemy.Controllers
             return BadRequest("Invalid Imput");
         }
 
+        // GET api/values/division/5/5
+        [HttpGet("division/{firstNumber}/{secondNumber}")]
+        public IActionResult Division(string firstNumber, string secondNumber)
+        {
+            if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
+            {
+                var sum = ConvertToDecimal(firstNumber) / ConvertToDecimal(secondNumber);
+
+                return Ok(sum.ToString());
+            }
+            return BadRequest("Invalid Imput");
+        }
+
+        // GET api/values/multiplication/5/5
+        [HttpGet("multiplication/{firstNumber}/{secondNumber}")]
+        public IActionResult Mutiplication(string firstNumber, string secondNumber)
+        {
+            if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
+            {
+                var sum = ConvertToDecimal(firstNumber) * ConvertToDecimal(secondNumber);
+
+                return Ok(sum.ToString());
+            }
+            return BadRequest("Invalid Imput");
+        }
+
         private decimal ConvertToDecimal(string number)
         {
             decimal decimalValue;
