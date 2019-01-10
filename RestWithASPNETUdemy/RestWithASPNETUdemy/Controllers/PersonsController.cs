@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RestWithASPNETUdemy.Model;
+using RestWithASPNETUdemy.Services;
 
 namespace RestWithASPNETUdemy.Controllers
 {
@@ -10,73 +12,51 @@ namespace RestWithASPNETUdemy.Controllers
     [ApiController]
     public class PersonsController : ControllerBase
     {
-        // GET api/values/sum/5/5
-        [HttpGet("sum/{firstNumber}/{secondNumber}")]
-        public IActionResult Sum(string firstNumber, string secondNumber)
+        private IPersonService _personService;
+        public PersonsController(IPersonService personService)
         {
-            if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
-            {
-                var sum = ConvertToDecimal(firstNumber) + ConvertToDecimal(secondNumber);
-
-                return Ok(sum.ToString());
-            }
-            return BadRequest("Invalid Imput");
+            _personService = personService;
         }
 
-        // GET api/values/subtraction/5/5
-        [HttpGet("subtraction/{firstNumber}/{secondNumber}")]
-        public IActionResult Subtraction(string firstNumber, string secondNumber)
+        // GET api/values
+        [HttpGet]
+        public IActionResult Get()
         {
-            if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
-            {
-                var sum = ConvertToDecimal(firstNumber) - ConvertToDecimal(secondNumber);
-
-                return Ok(sum.ToString());
-            }
-            return BadRequest("Invalid Imput");
+            return Ok(_personService.FindAll());
         }
 
-        // GET api/values/division/5/5
-        [HttpGet("division/{firstNumber}/{secondNumber}")]
-        public IActionResult Division(string firstNumber, string secondNumber)
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
-            {
-                var sum = ConvertToDecimal(firstNumber) / ConvertToDecimal(secondNumber);
-
-                return Ok(sum.ToString());
-            }
-            return BadRequest("Invalid Imput");
+            var person = _personService.FindById(id);
+            if (person == null) return NotFound();
+            return Ok(person);
         }
 
-        // GET api/values/multiplication/5/5
-        [HttpGet("multiplication/{firstNumber}/{secondNumber}")]
-        public IActionResult Mutiplication(string firstNumber, string secondNumber)
+        // POST api/values
+        [HttpPost]
+        public IActionResult Post([FromBody]Person person)
         {
-            if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
-            {
-                var sum = ConvertToDecimal(firstNumber) * ConvertToDecimal(secondNumber);
-
-                return Ok(sum.ToString());
-            }
-            return BadRequest("Invalid Imput");
+            if (person == null) return BadRequest();
+            return new ObjectResult(_personService.Create(person));
         }
 
-        private decimal ConvertToDecimal(string number)
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public IActionResult Put([FromBody]Person person)
         {
-            decimal decimalValue;
-            if (decimal.TryParse(number, out decimalValue))
-            {
-                return decimalValue;
-            }
-            return 0;
+            if (person == null) return BadRequest();
+            return new ObjectResult(_personService.Update(person));
+
         }
 
-        private bool IsNumeric(string strNumber)
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            double number;
-            bool isNumber = double.TryParse(strNumber, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out number);
-            return isNumber;
+            _personService.Delete(id);
+
         }
     }
 }

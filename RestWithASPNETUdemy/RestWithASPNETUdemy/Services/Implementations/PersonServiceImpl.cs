@@ -27,7 +27,7 @@ namespace RestWithASPNETUdemy.Services.Implementations
             };
         }
 
-        public void Delete(Person person)
+        public void Delete(int id)
         {
         }
 
